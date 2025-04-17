@@ -92,32 +92,74 @@ def reset_db():
 def show_all_reviews():
     reviews = db_manager.get()
     return render_template_string('''
-        <html>
-        <head><title>Movie Reviews</title></head>
-        <body>
-            <h1>Movie Reviews</h1>
-            <a href="{{ url_for('new_review') }}">Add New Review</a>
-            <table border="1">
-                <tr>
-                    <th>Title</th>
-                    <th>Rating</th>
-                    <th>Actions</th>
-                </tr>
-                {% for review in reviews %}
-                <tr>
-                    <td><a href="{{ url_for('view_review', review_id=review.id) }}">{{ review.title }}</a></td>
-                    <td>{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</td>
-                    <td>
-                        <a href="{{ url_for('edit_review', review_id=review.id) }}">Edit</a>
-                        <form action="{{ url_for('delete_review', review_id=review.id) }}" method="post" style="display:inline;">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </body>
-        </html>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <title>Movie Reviews</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                background: url('{{ url_for('static', filename='ghibli.png') }}') no-repeat center center fixed;
+                background-size: cover;
+                font-family: 'Segoe UI', sans-serif;
+                padding: 2rem;
+                color: #333;
+            }
+            .review-table {
+                background-color: rgba(255, 255, 255, 0.85);
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 1rem;
+            }
+            .stars {
+                color: gold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center text-white mb-4"> Ghibli Movie Theater Reviews</h1>
+            <div class="text-center mb-3">
+                <a href="{{ url_for('new_review') }}" class="btn btn-success">➕ Add New Review</a>
+            </div>
+            <div class="review-table">
+                <table class="table table-hover text-center align-middle">  
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td><a href="{{ url_for('view_review', review_id=review.id) }}">{{ review.title }}</a></td>
+                            <td class="stars">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</td>
+                            <td>
+                                <a href="{{ url_for('edit_review', review_id=review.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                <button onclick="deleteReview({{ review.id }}, this)" class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+            function deleteReview(id, el) {
+                fetch(`/delete/${id}`, { method: 'POST' })
+                .then(res => {
+                    if (res.ok) {
+                        el.closest('tr').remove();
+                    } else {
+                        alert('Error deleting review.');
+                    }
+                });
+            }
+        </script>
+    </body>
+    </html>
     ''', reviews=reviews)
 
 @app.route('/new', methods=['GET', 'POST'])
