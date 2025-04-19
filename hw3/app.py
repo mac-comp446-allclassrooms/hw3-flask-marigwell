@@ -99,9 +99,9 @@ def show_all_reviews():
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                background: url('{{ url_for('static', filename='ghibli.png') }}') no-repeat center center fixed;
+                background: url('{{ url_for('static', filename='ghibli.png') }}') no-repeat center fixed;
                 background-size: cover;
-                font-family: 'Segoe UI', sans-serif;
+                font-family: sans-serif;
                 padding: 2rem;
                 color: #333;
             }
@@ -120,7 +120,7 @@ def show_all_reviews():
         <div class="container">
             <h1 class="text-center text-white mb-4"> Ghibli Movie Theater Reviews</h1>
             <div class="text-center mb-3">
-                <a href="{{ url_for('new_review') }}" class="btn btn-success">➕ Add New Review</a>
+                <a href="{{ url_for('new_review') }}" class="btn btn-success">Add New Review</a>
             </div>
             <div class="review-table">
                 <table class="table table-hover text-center align-middle">  
@@ -172,14 +172,56 @@ def new_review():
         return redirect(url_for('show_all_reviews'))
 
     return render_template_string('''
-        <h1>Create New Review</h1>
-        <form method="POST">
-            Title: <input type="text" name="title" required><br>
-            Review: <br><textarea name="text" rows="5" cols="40" required></textarea><br>
-            Rating (1-5): <input type="number" name="rating" min="1" max="5" required><br>
-            <button type="submit">Submit</button>
-        </form>
-        <a href="{{ url_for('show_all_reviews') }}">← Back to reviews</a>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <title>Create Review</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                background: url('{{ url_for('static', filename='ghibli.png') }}') no-repeat center fixed;
+                background-size: cover;
+                font-family: sans-serif;
+                padding: 2rem;
+            }
+            .form-card {
+                background-color: rgba(255, 255, 255, 0.9);
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                max-width: 600px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="form-card mt-5">
+                <h2 class="text-center mb-4"> Create New Review</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Review</label>
+                        <textarea class="form-control" name="text" rows="5"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rating (1-5)</label>
+                        <input type="number" class="form-control" name="rating" min="1" max="5">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Submit Review</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('show_all_reviews') }}" class="btn btn-link">← Back to Reviews</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
     ''')
 
 @app.route('/edit/<int:review_id>', methods=['GET', 'POST'])
@@ -196,14 +238,56 @@ def edit_review(review_id):
         return redirect(url_for('show_all_reviews'))
 
     return render_template_string('''
-        <h1>Edit Review</h1>
-        <form method="POST">
-            Title: <input type="text" name="title" value="{{ review.title }}" required><br>
-            Review: <br><textarea name="text" rows="5" cols="40" required>{{ review.text }}</textarea><br>
-            Rating (1-5): <input type="number" name="rating" min="1" max="5" value="{{ review.rating }}" required><br>
-            <button type="submit">Update</button>
-        </form>
-        <a href="{{ url_for('show_all_reviews') }}">← Back to reviews</a>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <title>Edit Review</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                background: url('{{ url_for('static', filename='ghibli.png') }}') no-repeat center fixed;
+                background-size: cover;
+                font-family: sans-serif;
+                padding: 2rem;
+            }
+            .form-card {
+                background-color: rgba(255, 255, 255, 0.9);
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                max-width: 600px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="form-card mt-5">
+                <h2 class="text-center mb-4">Edit Review</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" value="{{ review.title }}" >
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Review</label>
+                        <textarea class="form-control" name="text" rows="5" >{{ review.text }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rating (1-5)</label>
+                        <input type="number" class="form-control" name="rating" min="1" max="5" value="{{ review.rating }}" >
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Update Review</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('show_all_reviews') }}" class="btn btn-link">← Back to Reviews</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
     ''', review=review)
 
 @app.route('/delete/<int:review_id>', methods=['POST'])
@@ -218,11 +302,45 @@ def view_review(review_id):
         return "Review not found", 404
 
     return render_template_string('''
-        <h1>{{ review.title }}</h1>
-        <p class="stars">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</p>
-        <p>{{ review.text }}</p>
-        <a href="{{ url_for('show_all_reviews') }}">← Back to reviews</a>
-        <style>.stars { color: gold; }</style>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <title>{{ review.title }}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                background: url('{{ url_for('static', filename='ghibli.png') }}') no-repeat center fixed;
+                background-size: cover;
+                font-family: sans-serif;
+                padding: 2rem;
+                color: #333;
+            }
+            .review-card {
+                background-color: rgba(255, 255, 255, 0.85);
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 2rem;
+                max-width: 600px;
+                margin: auto;
+            }
+            .stars {
+                color: gold;
+                font-size: 1.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center text-white mb-4">Review Details</h1>
+            <div class="review-card text-center">
+                <h2>{{ review.title }}</h2>
+                <p class="stars">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</p>
+                <p>{{ review.text }}</p>
+                <a href="{{ url_for('show_all_reviews') }}" class="btn btn-primary mt-3">← Back to reviews</a>
+            </div>
+        </div>
+    </body>
+    </html>
     ''', review=review)
 
 
